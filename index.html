@@ -4,9 +4,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=9" />
 <title>Jay Framework Documentation</title>
-<script src="../jquery.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+<script src="jquery.js"></script>
+<script src="bootstrap.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
 	<div class="container">
@@ -124,8 +124,329 @@
 		<h2>Request</h2>
 		</div>
 		<p class="lead">The request part of Jay is boiled down to the single function <code>Jay.request()</code> which allows you to make Nxt API calls to Nxt public nodes in a variety of ways.</p>
-		<h3>Request Methods</h3>
-		<p>
+		<h3>Jay.requestMethod</h3>
+		<p>The Jay Framework provides a few different ways to gather API information from public nodes on the Nxt network.</p>
+		<table class="table table-striped">
+			<tr>
+				<td><code>Jay.requestMethods.single</code></td>
+				<td>Changes <code>Jay.request()</code> to only use a single predifined node. <strong>The node must be set first with <code>Jay.setNode()</code></td>
+			</tr>
+			<tr>
+				<td><code>Jay.requestMethods.fastest</code></td>
+				<td>Does a speed test on common Nxt public nodes to find the one that can return data to the user the fastest, then requests data from that one.</td>
+			</tr>
+			<tr>
+				<td><code>Jay.requestMethods.validate</code></td>
+				<td>Takes the top three fastest nodes as gathered by the above type and runs simultaneous requests on all of them, the data is validated across two different nodes before considered valid. <strong>Use only with important data, slows down performance considerably</strong></td>
+			</tr>
+		</table>
+		<div class="well">
+			<h4><code>Jay.setRequestType(requestMethod)</code></h4>
+			<em>Sets the global requestMethod for <code>Jay.request()</code></em>
+			<dl class="dl-horizontal">
+				<dt><code>requestMethod</code></dt>
+				<dd>One of the <code>Jay.requestMethods</code> in the table above.</dd>
+				<dt>returns</dt>
+				<dd>Nothing</dd>
+			</dl>
+			<code><strong>EG:</strong><br/>Jay.setRequestType(Jay.requestTypes.fastest);</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.setNode(node)</code></h4>
+			<em>Sets the node required by <code>Jay.requestMethods.single</code></em>
+			<dl class="dl-horizontal">
+				<dt><code>node</code></dt>
+				<dd>String of the node url or ip address.</dd>
+				<dt>returns</dt>
+				<dd>Nothing</dd>
+			</dl>
+			<code><strong>EG:</strong><br/>Jay.setNode("jnxt.org");</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.setNode(node)</code></h4>
+			<em>Sets the node required by <code>Jay.requestMethods.single</code></em>
+			<dl class="dl-horizontal">
+				<dt><code>node</code></dt>
+				<dd>String of the node url or ip address.</dd>
+				<dt>returns</dt>
+				<dd>Nothing</dd>
+			</dl>
+			<code><strong>EG:</strong><br/>Jay.setNode("jnxt.org");</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.isTestnet</code></h4>
+			<em>Boolean value for switching bewteen port 7876 (mainnet) and port 6876 (testnet). <strong> should be used with <code>Jay.requestMethods.single</code></strong></em><br/>
+
+			<code><strong>EG:</strong><br/>Jay.isTestnet=true;</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.request(requestType, parameters, onSuccess, onFailure, requestMethod)</code></h4>
+			<em>Makes a request to Nxt public nodes to return a API request. (async)</em>
+			<dl class="dl-horizontal">
+				<dt><code>requestType</code></dt>
+				<dd>Name of the request to be called as an API request</dd>
+				<dt><code>parameters</code></dt>
+				<dd>Object with key value pairs to be passed to the public nodes for the request</dd>
+				<dt><code>onSuccess</code></dt>
+				<dd>The function to be called on a succesful result of the request. Function is also called on failure when <code>onFailure</code> parameter is undefined</dd>
+				<dt><code>onFailure</code></dt>
+				<dd>(optional) is called when there is an inability to recieve data from the nodes polled</dd>
+				<dt><code>requestMethod</code></dt>
+				<dd>(optional) defines the <code>Jay.requestMethod</code> to use for the request, uses <code>Jay.requestMethods.default</code> if this is not supplied</dd>
+				<dt>returns</dt>
+				<dd>onSuccess returns three objects.
+					<ul>
+						<li>resp - The text response from the request</li>
+						<li>status - "success" / "error" / "timeout"</li>
+						<li>xhr - object holding information about the request</li>
+					</ul>
+				</dd>
+			</dl>
+			<code><strong>EG:</strong><br/>Jay.request("getTime", {}, function(resp, status, xhr) {<br/>&nbsp;&nbsp;&nbsp;&nbsp;document.write(JSON.parse(resp).time);<br/>});</code>
+		</div>
+		<p> For additional info about Nxt requests, visit the Nxt node test request page at <a href="http://jnxt.org:7876/test">jnxt.org:7876/test</a></p>
+		<div class="page-header"><h2>Transactions</h2></div>
+		<p class="lead">Transactions in Jay are represented by TRF strings, or Transaction Request Format. The transaction functions allow for the quick and easy creation of these TRF strings for all different types of Nxt transactions.</p>
+		<h3>Payment Type</h3>
+		<div class="well">
+			<h4><code>Jay.sendMoney(recipient, amount, appendages)</code></h4>
+			<em>Sends Nxt from account executing the transaction to the recipient.</em>
+			<dl class="dl-horizontal">
+				<dt><code>recipient</code></dt>
+				<dd>RS encoded address "NXT-" of the recipient of the transaction.</dd>
+				<dt><code>amount</code></dt>
+				<dd>Amount in NXT to send the recipient.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.sendMoney("NXT-RJU8-JSNR-H9J4-2KWKY", 10));</code>
+		</div>
+		<h3>Messaging Type</h3>
+		<div class="well">
+			<h4><code>Jay.sendMessage(recipient, message, appendages)</code></h4>
+			<em>Sends message from account executing the transaction to the recipient.</em>
+			<dl class="dl-horizontal">
+				<dt><code>recipient</code></dt>
+				<dd>RS encoded address "NXT-" of the recipient of the transaction.</dd>
+				<dt><code>message</code></dt>
+				<dd>String of text to send to the recipient. Stored in a message appendage</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.sendMessage("NXT-RJU8-JSNR-H9J4-2KWKY", "hello"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.setAlias(alias, data, appendages)</code></h4>
+			<em>Registers an alias of data to alias for the sender</em>
+			<dl class="dl-horizontal">
+				<dt><code>alias</code></dt>
+				<dd>String of the alias name to register</dd>
+				<dt><code>data</code></dt>
+				<dd>Data to store in the alias.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.setAlias("jay", "is a great thing"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.setAccountInfo(name, description, appendages)</code></h4>
+			<em>Sets the name and description of the account that executes this.</em>
+			<dl class="dl-horizontal">
+				<dt><code>name</code></dt>
+				<dd>The new name of the account</dd>
+				<dt><code>description</code></dt>
+				<dd>1000 char max description of the account.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.setAccountInfo("jones", "Very cool person"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.sellAlias(alias, price, recipient, appendages)</code></h4>
+			<em>Sets an alias up for sale for a specific account, or all of them.</em>
+			<dl class="dl-horizontal">
+				<dt><code>alias</code></dt>
+				<dd>name of alias to sell.</dd>
+				<dt><code>price</code></dt>
+				<dd>Cost in NXT that will be paid for the alias.</dd>
+				<dt><code>recipient</code></dt>
+				<dd>Set to either a recipient RS address, or eiter "anyone" or left blank to denote all accounts</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.sellAlias("jay", 1000, "anyone"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.buyAlias(alias, amount, seller, appendages)</code></h4>
+			<em>Purchases a for sale alias.</em>
+			<dl class="dl-horizontal">
+				<dt><code>alias</code></dt>
+				<dd>String of the alias name to buy</dd>
+				<dt><code>amount</code></dt>
+				<dd>Amount in NXT to buy the alias.</dd>
+				<dt><code>seller</code></dt>
+				<dd>The RS address of the account selling the alias</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.setAlias("jay", "is a great thing"));</code>
+		</div>
+		<h3>Asset Exchange Type</h3>
+		<div class="well">
+			<h4><code>Jay.issueAsset(name, description, quantity, decimals, appendages)</code></h4>
+			<em>Creates a new asset with the parameters listed. <strong>Fee is 1000 NXT</strong></em>
+			<dl class="dl-horizontal">
+				<dt><code>name</code></dt>
+				<dd>3 to 10 character name for the asset to be referenced as.</dd>
+				<dt><code>description</code></dt>
+				<dd>Text describing the asset (cannot be changed)</dd>
+				<dt><code>quantity</code></dt>
+				<dd>amount of tokens to be issued with the asset.</dd>
+				<dt><code>decimals</code></dt>
+				<dd>Between 0 and 8, divisibility of the asset, 4 is suggested</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.issueAsset("JAY", "solid asset", 100, 4));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.transferAsset(recipient, assetId, quantityQNT, appendages)</code></h4>
+			<em>Transfers quantityQNT amount of assetId to recipient.</em>
+			<dl class="dl-horizontal">
+				<dt><code>recipient</code></dt>
+				<dd>The RS address of the account to send the assets to.</dd>
+				<dt><code>assetId</code></dt>
+				<dd>String of the 64 bit number for the id of the asset.</dd>
+				<dt><code>quantityQNT</code></dt>
+				<dd>Amount of the asset to send <strong>IMPORTANT: quantityQNT is the base amount of the asset, which is <code>quantity*(10^asset_decimals)</code></strong></dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.transferAsset("NXT-RJU8-JSNR-H9J4-2KWKY", "1087293892384992", 10000));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.placeAskOrder(assetId, quantityQNT, price, appendages)</code></h4>
+			<em>Sets an offer to exchange the asset for NXT at the price provided</em>
+			<dl class="dl-horizontal">
+				<dt><code>assetId</code></dt>
+				<dd>String of the 64 bit number for the id of the asset.</dd>
+				<dt><code>quantityQNT</code></dt>
+				<dd>Amount of the asset to send <strong>IMPORTANT: quantityQNT is the base amount of the asset, which is <code>quantity*(10^asset_decimals)</code></strong></dd>
+				<dt><code>price</code></dt>
+				<dd>The NXT price of a single unit of the asset.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.placeAskOrder("1923912832423309191283", 10000, 25));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.placeBidOrder(assetId, quantityQNT, price, appendages)</code></h4>
+			<em>Sets an offer to exchange NXT for the Asset at the price provided</em>
+			<dl class="dl-horizontal">
+				<dt><code>assetId</code></dt>
+				<dd>String of the 64 bit number for the id of the asset.</dd>
+				<dt><code>quantityQNT</code></dt>
+				<dd>Amount of the asset to send <strong>IMPORTANT: quantityQNT is the base amount of the asset, which is <code>quantity*(10^asset_decimals)</code></strong></dd>
+				<dt><code>price</code></dt>
+				<dd>The NXT price of a single unit of the asset.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.placeBidOrder("1923912832423309191283", 10000, 24));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.cancelAskOrder(orderId, appendages)</code></h4>
+			<em>Cancels a current order placed earlier.</em>
+			<dl class="dl-horizontal">
+				<dt><code>assetId</code></dt>
+				<dd>String of the 64 bit number for the id of the order to cancel.</dd>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.cancelAskOrder("1923912832423309191283"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.cancelBidOrder(orderId, appendages)</code></h4>
+			<em>Cancels a current order placed earlier.</em>
+			<dl class="dl-horizontal">
+				<dt><code>assetId</code></dt>
+				<dd>String of the 64 bit number for the id of the order to cancel.</dd>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.cancelBidOrder("1923912832423309191283"));</code>
+		</div>
+		<h3>Marketplace Type</h3>
+		<h3>Monetary System Type</h3>
+
+		<h3>Appendages</h3>
+		<p>Appendages are added to the end of transactions and are noted in the flags. Jay has a few functions to easily deal with appendages.</p>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Appendage</th>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Message</td>
+					<td>Jay.appendages.message</td>
+					<td>Plaintext message to be sent along with the transaction</td>
+				</tr>
+				<tr>
+					<td>Encrypted Message</td>
+					<td>Jay.appendages.encryptedMessage</td>
+					<td><strong>Not yet implemented.</strong> Encrypt a message so only the recipient can read</td>
+				</tr>
+				<tr>
+					<td>Encrypted Message To Self</td>
+					<td>Jay.appendages.encryptedMessageToSelf</td>
+					<td><strong>Not yet implemented.</strong> Encrypt a message so only sender can read</td>
+				</tr>
+				<tr>
+					<td>Public Key Announcement</td>
+					<td>Jay.appendages.publicKeyAnnouncement</td>
+					<td>Gives the network the public key of the recipient to add security to the recipient account.</td>
+				</tr>
+			</tbody>
+		</table>
+
 	</div>
 
 </body>
