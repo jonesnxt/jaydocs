@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<title>Jay Framework Documentation</title>
+<script src="../jquery.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h1>Jay Framework Documentation</h1>
+		</div>
+		<p class="lead">
+			The Jay Framework is a javascript library held within <code>jay.js</code>. This library provides all the basic functions required to create applications that interface with Nxt and the Jay Client.
+		</p>
+		<div class="page-header"><h2>Jay Overview</h2></div>
+		<p>Jay is a different and fairly complicated system. There is the frontend, the Jay client, and the backend, the Jay Framework.</p>
+		<table class="table table-striped">
+			<tr>
+				<td>Jay Client</td>
+				<td>Frontend. Single page downloadable html file that creates a small window that handles all of the cryptography and security for the user locally. Is given commands on what to do through a format called TRF</td>
+			</tr>
+			<tr>
+				<td>Jay Framework</td>
+				<td>Backend. The <code>jay.js</code> library that developers use to create applications for Jay. Imlements features for creating these TRF strings, as well as requests and tokens</td>
+			</tr>
+			<tr>
+				<td>TRF Format</td>
+				<td>Stands for Transaction Request Format, also refered to as TX_ format in the frontend. Provides a way to transmit transaction data between The backend to the frontend in a way that is friendly and easy for the user</td>
+			</tr>
+		</table>
+		<h3>Structure</h3>
+		<p>The Jay Framework broken up into three parts:</p>
+		<table class="table table-striped">
+			<tr>
+				<td>Request</td>
+				<td>Jay.request allows a web application to interface with the web APIs of public Nxt nodes in order to gather data necesarry for your application without needing to set up a private node just to deploy it.</td>
+			</tr>
+			<tr>
+				<td>Transaction</td>
+				<td>Allows for the easy creation of transactions to be accepted by the Jay Client. Because of the TRF format, you can now make transaction requests in wallets without having to worry about cryptography or security at all.</td>
+			</tr>
+			<tr>
+				<td>Token</td>
+				<td>The token.js library is used with Jay to allow for the easy creation and verification of the Nxt standard of tokens. This allows you to create a quick and easy login system for you application that is dependant only on the users Nxt account. No more username and passwork required.</td>
+			</tr>
+		</table>
+		<h3>TRF Format</h3>
+		<p>TRF format takes the traditional format for unsigned transaction bytes, and tries to improve on them by dropping any parts that are unnecesarry for the Jay system.</p>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Length (bytes)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>TRF Type</td>
+					<td>The type of TRF that is being used, 1 for NXT transactions.</td>
+					<td>1 byte</td>
+				</tr>
+				<tr>
+					<td>Nxt Type</td>
+					<td>The transaction type of the transaction being requested</td>
+					<td>1 byte</td>
+				</tr>
+				<tr>
+					<td>Nxt Version</td>
+					<td>The version of Nxt Transaction being used, currently 1</td>
+					<td>0.5 bytes (4 bits)</td>
+				</tr>
+				<tr>
+					<td>Nxt Subtype</td>
+					<td>The subtype of the transaction being requested</td>
+					<td>0.5 bytes (4 bits)</td>
+				</tr>
+				<tr>
+					<td>Recipient</td>
+					<td>The byte representation of the 64 bit integer assigned to the account that will act as the recipient to this transaction. Set to <code>Jay.genesisRS</code> when not applicable.</td>
+					<td>8 bytes</td>
+				</tr>
+				<tr>
+					<td>Amount</td>
+					<td>The amount of NXT in NQT requested to be sent in the transaction, NQT calculated by <code>NXT_amount*Jay.oneNxt</code></td>
+					<td>8 bytes</td>
+				</tr>
+				<tr>
+					<td>Fee</td>
+					<td>The amount of NXT in NQT to be send as a fee for the transaction, NQT calculated by <code>NXT_amount*Jay.oneNxt</code></td>
+					<td>8 bytes</td>
+				</tr>
+				<tr>
+					<td>Flags</td>
+					<td>Trigger the inclusion of appendages to the end of transactions, like messages, or Pbulic Key anouncements.</td>
+					<td>4 bytes</td>
+				</tr>
+				<tr>
+					<td>Attachment</td>
+					<td>Prefaced with 1 byte version, includes information relevent to the type of transaction.</td>
+					<td>Variable</td>
+				</tr>
+				<tr>
+					<td>Appendages</td>
+					<td>As noted in Flags, the addition inclusions to the end of a transaction, also prefaced with 1 byte version number.</td>
+					<td>Variable</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			TRF format uses follows the format.
+		</p>
+			<div class="well">
+				<code>
+					TRF = "TX_" + Jay.base62Encode(trfBytes)
+				</code>
+			</div>
+		<p>Where base 62 encoding has digits 0 - 9, then Capital letters A - Z, then lower case letters a - z. to total <code>10 + 26 + 26 = 62</code>. Base62 is used instead of the more common base64 because it allows for all alpha-numeric characters to be used without any select breaking special characters. This allows you to double click select an entire TRF string without the select breaking due to a dash or a slash.</p>
+			<div class="page-header">
+		<h2>Request</h2>
+		</div>
+		<p class="lead">The request part of Jay is boiled down to the single function <code>Jay.request()</code> which allows you to make Nxt API calls to Nxt public nodes in a variety of ways.</p>
+		<h3>Request Methods</h3>
+		<p>
+	</div>
+
+</body>
+</html>
