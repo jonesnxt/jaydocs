@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td>Token</td>
-				<td>The token.js library is used with Jay to allow for the easy creation and verification of the Nxt standard of tokens. This allows you to create a quick and easy login system for you application that is dependant only on the users Nxt account. No more username and passwork required.</td>
+				<td>The token.js library is used with Jay to allow for the easy creation and verification of the Nxt standard of tokens. This allows you to create a quick and easy login system for you application that is dependant only on the users Nxt account. No more username and password required.</td>
 			</tr>
 		</table>
 		<h3>TRF Format</h3>
@@ -133,7 +133,7 @@
 			</tr>
 			<tr>
 				<td><code>Jay.requestMethods.fastest</code></td>
-				<td>Does a speed test on common Nxt public nodes to find the one that can return data to the user the fastest, then requests data from that one.</td>
+				<td>(default) Does a speed test on common Nxt public nodes to find the one that can return data to the user the fastest, then requests data from that one.</td>
 			</tr>
 			<tr>
 				<td><code>Jay.requestMethods.validate</code></td>
@@ -150,17 +150,6 @@
 				<dd>Nothing</dd>
 			</dl>
 			<code><strong>EG:</strong><br/>Jay.setRequestType(Jay.requestTypes.fastest);</code>
-		</div>
-		<div class="well">
-			<h4><code>Jay.setNode(node)</code></h4>
-			<em>Sets the node required by <code>Jay.requestMethods.single</code></em>
-			<dl class="dl-horizontal">
-				<dt><code>node</code></dt>
-				<dd>String of the node url or ip address.</dd>
-				<dt>returns</dt>
-				<dd>Nothing</dd>
-			</dl>
-			<code><strong>EG:</strong><br/>Jay.setNode("jnxt.org");</code>
 		</div>
 		<div class="well">
 			<h4><code>Jay.setNode(node)</code></h4>
@@ -307,7 +296,7 @@
 				<dd>TX_ string requesting the transaction</dd>
 				<dd>
 			</dl>
-			<code><strong>EG:</strong><br/>document.write(Jay.setAlias("jay", "is a great thing"));</code>
+			<code><strong>EG:</strong><br/>document.write(Jay.buyAlias("jay", 1000, "NXT-RJU8-JSNR-H9J4-2KWKY"));</code>
 		</div>
 		<h3>Asset Exchange Type</h3>
 		<div class="well">
@@ -390,6 +379,7 @@
 			<dl class="dl-horizontal">
 				<dt><code>assetId</code></dt>
 				<dd>String of the 64 bit number for the id of the order to cancel.</dd>
+				<dt><code>appendages</code></dt>
 				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
 				<dt>returns</dt>
 				<dd>TX_ string requesting the transaction</dd>
@@ -403,6 +393,7 @@
 			<dl class="dl-horizontal">
 				<dt><code>assetId</code></dt>
 				<dd>String of the 64 bit number for the id of the order to cancel.</dd>
+				<dt><code>appendages</code></dt>
 				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
 				<dt>returns</dt>
 				<dd>TX_ string requesting the transaction</dd>
@@ -411,10 +402,218 @@
 			<code><strong>EG:</strong><br/>document.write(Jay.cancelBidOrder("1923912832423309191283"));</code>
 		</div>
 		<h3>Marketplace Type</h3>
+		<div class="alert alert-info"><strong>Version 1 of the Jay Framework doesn't include libraries for encrypting or decrypting messages</strong><p>This will be delayed until version 2, so as such some features of the marketplace may not work well under this release as encrypted messaging is used for communication accross this feature</p></div>
+		<div class="well">
+			<h4><code>Jay.dgsListing(name, description, tags, quantity, price, appendages)</code></h4>
+			<em>Creates a new item listing on Nxt's on-chain marketplace</em>
+			<dl class="dl-horizontal">
+				<dt><code>name</code></dt>
+				<dd>String of the name of the item to list.</dd>
+				<dt><code>description</code></dt>
+				<dd>Up to 1000 characters describing the item being listed.</dd>
+				<dt><code>tags</code></dt>
+				<dd>Up to 3 comma seperated tags relevent to this item</dd>
+				<dt><code>quantity</code></dt>
+				<dd>Amount that are available to sell.</dd>
+				<dt><code>price</code></dt>
+				<dd>The cost in NXT for one count of the item.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsListing("candy", "delicious", "candy,sweet",100, 10.4));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsDelisting(itemId, appendages)</code></h4>
+			<em>Makes a previously created item no longer available for sale.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsDelisting("1912177345309191283"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsPriceChange(itemId, newPrice, appendages)</code></h4>
+			<em>Change the price of a previously created item.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>newPrice</code></dt>
+				<dd>The new price for the item denoted in NXT</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsPriceChange("1912177345309191283", 20));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsQuantityChange(itemId, deltaQuantity, appendages)</code></h4>
+			<em>Add or subtract available supply of an item.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>deltaQuantity</code></dt>
+				<dd>The change in quantity compared to the current quantity of the item. (positive to add items, negative to subtract items)
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsDelisting("1912177345309191283"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsDelisting(itemId, appendages)</code></h4>
+			<em>Makes a previously created item no longer available for sale.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsDelisting("1912177345309191283"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsPurchase(itemId, quantity, price, appendages)</code></h4>
+			<em>Puts in a buy order for an <code>quantity</code> amount of items.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>quantity</code></dt>
+				<dd>The amount of the item to be bought.</dd>
+				<dt><code>price</code></dt>
+				<dd>The amount to pay for each item denoted in NXT</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsDelisting("1912177345309191283"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsFeedback(itemId, feedback, appendages)</code></h4>
+			<em>Make a publically available message relating to the outcome of an item order.</em>
+			<dl class="dl-horizontal">
+				<dt><code>itemId</code></dt>
+				<dd>64 bit integer as a string id for the item.</dd>
+				<dt><code>feedback</code></dt>
+				<dd>String of the feedback to be publically placed in reference to the item.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsFeedback("1912177345309191283", "this is a good item"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.dgsRefund(purchaseId, refundAmount, appendages)</code></h4>
+			<em>Return an amount of NXT to the purchaser of one of your items.</em>
+			<dl class="dl-horizontal">
+				<dt><code>refundId</code></dt>
+				<dd>64 bit integer as a string id for the purchase to be refunded.</dd>
+				<dt><code>refundAmount</code></dt>
+				<dd>Amount to refund the purchaser of the item in NXT.</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.dgsFeedback("1912177345309191283", "this is a good item"));</code>
+		</div>
+		<h3>Account Control Type</h3>
+			<div class="well">
+			<h4><code>Jay.leaseBalance(recipient, duration, appendages)</code></h4>
+			<em>Allow your account balance to be used for forging by another person.</em>
+			<dl class="dl-horizontal">
+				<dt><code>recipient</code></dt>
+				<dd>RS address for the account sending your effective balance to</dd>
+				<dt><code>duration</code></dt>
+				<dd>Number of blocks to lease accounts balance for. 32767 Max blocks</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.leaseBalance("NXT-RJU8-JSNR-H9J4-2KWKY", 32676));</code>
+		</div>
 		<h3>Monetary System Type</h3>
-
+		<div class="well">
+			<h4><code>Jay.currencyReserveIncrease(currencyId, amountPerUnit, appendages)</code></h4>
+			<em>Reserves an amount of a MS currency, used for crowdfunding.</em>
+			<dl class="dl-horizontal">
+				<dt><code>currencyId</code></dt>
+				<dd>64 bit integer in string form of the id for the currency to reserve.</dd>
+				<dt><code>amountPerUnit</code></dt>
+				<dd>The amount in NXT to reserve for each MS unit</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.currencyReserveIncrease("9328472983610920379", 10));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.transferCurrency(recipient, currencyId, amountQNT, appendages)</code></h4>
+			<em>Transfers <code>amountQNT</code> of a currency to the recipient</em>
+			<dl class="dl-horizontal">
+				<dt><code>recipient</code></dt>
+				<dd>The RS address for the account to send the currency to.</dd>
+				<dt><code>currencyId</code></dt>
+				<dd>64 bit integer in string form of the id for the currency to reserve.</dd>
+				<dt><code>amountQNT</code></dt>
+				<dd>The amount of MS units to transfer to the recipient. <strong>IMPORTANT: quantityQNT is the base amount of the currency, which is <code>quantity*(10^currency_decimals)</code></strong> </dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.transferCurrency("NXT-RJU8-JSNR-H9J4-2KWKY", "923027349287340324", 10000));</code>
+		</div>
+		<h3>Custom Trasaction Requests</h3>
+		<div class="well">
+			<h4><code>Jay.createTrf(type, subtype, recipient, amount, fee, attachment, appendages)</code></h4>
+			<em>The basic template for creating TRF strings.</em>
+			<dl class="dl-horizontal">
+				<dt><code>type</code></dt>
+				<dd>The Nxt type number</dd>
+				<dt><code>subtype</code></dt>
+				<dd>The Nxt Subtype number</dd>
+				<dt><code>recipient</code></dt>
+				<dd>RS address for the recipient account or <code>Jay.genesisRS</code> where recipient is not needed</dd>
+				<dt><code>amount</code></dt>
+				<dd>Amount to send with the transaction, zero where not needed</dd>
+				<dt><code>fee</code></dt>
+				<dd>Fee to be included in the transaction, generally 1 NXT</dd>
+				<dt><code>attachment</code></dt>
+				<dd>(optional) Byte array with additional bytes to add to the transaction including the fields needed for the transaction type specified</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) used to pass appendages to affix to the end of transactions</dd>
+				<dt>returns</dt>
+				<dd>TX_ string requesting the transaction</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.createTrf(0, 0, "NXT-RJU8-JSNR-H9J4-2KWKY", 100, 1));</code>
+		</div>
 		<h3>Appendages</h3>
-		<p>Appendages are added to the end of transactions and are noted in the flags. Jay has a few functions to easily deal with appendages.</p>
+		<p>Appendages are added to the end of transactions and are noted in the flags. Jay has code to easily deal with appendages.</p>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -446,6 +645,63 @@
 				</tr>
 			</tbody>
 		</table>
+		<div class="well">
+			<h4><code>Jay.addAppendage(newAppendage, newAppendageData, appendages)</code></h4>
+			<em>Adds an appendage to a transaction or to a list of other appendages.</em>
+			<dl class="dl-horizontal">
+				<dt><code>newAppendage</code></dt>
+				<dd>the <code>Jay.appendages</code> type that is being added to the appendages</dd>
+				<dt><code>newAppendageData</code></dt>
+				<dd>The data to be help in the appendage, either plaintext message or public key to be announced</dd>
+				<dt><code>appendages</code></dt>
+				<dd>(optional) the appendages to add this additional appendage on to. can be ignored f or first appendage</dd>
+				<dt>returns</dt>
+				<dd>appendages with the new appendage added on to it.</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>var appendage = Jay.addAppendage(Jay.appendages.message, "this is a message");<br/>document.write(Jay.sendMoney("NXT-RJU8-JSNR-H9J4-2KWKY", 100, appendage));</code>
+		</div>
+		<div class="page-header"><h2>Tokens</h2></div>
+		<p class="lead">Tokens are 160 character long strings that can be used to verify the ownership of an Nxt wallet. The <code>Jay.parseToken</code> function should not be used on the frontend for any login type applications as it is a security problem, I suggest using <a href="http://github.com/jonesnxt/nxtlib-php">NxtLib-PHP</a> For backend Token parsing.</p>
+		<div class="well">
+			<h4><code>Jay.createToken(websiteString, secretPhrase)</code></h4>
+			<em>Creates a 160 character token to verify the ownership of the account with <code>secretPhrase</code> as the passphrase.</em>
+			<dl class="dl-horizontal">
+				<dt><code>websiteString</code></dt>
+				<dd>The text used to sign the </dd>
+				<dt><code>secretPhrase</code></dt>
+				<dd>The passPhrase to the account that the token will be created for.</dd>
+				<dt>returns</dt>
+				<dd>the 160 character base32 encoded string.</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.createToken("jnxt.org","password"));</code>
+		</div>
+		<div class="well">
+			<h4><code>Jay.parseToken(tokenString, websiteString)</code></h4>
+			<em>Returns data about the token given to it and whether the token is valid or not.</em>
+			<dl class="dl-horizontal">
+				<dt><code>websiteString</code></dt>
+				<dd>The text used to sign the </dd>
+				<dt><code>secretPhrase</code></dt>
+				<dd>The passPhrase to the account that the token will be created for.</dd>
+				<dt>returns</dt>
+				<dd>An object containing four key/value pairs
+					<ul>
+						<li>isValid: true or false if the token values are valid</li>
+						<li>timestamp: Unix timestamp of the tokens creation</li>
+						<li>publicKey: Public key used to sign the token</li>
+						<li>accountRS: RS encoded address of account used for the token</li>
+					</ul>
+				</dd>
+				<dd>
+			</dl>
+			<code><strong>EG:</strong><br/>document.write(Jay.parseToken(tokenString, "jnxt.org"));</code>
+		</div>
+		<hr/>
+		<footer>
+			<p class="text-center">Jay Framework and all related documentation falls under the MIT license.</p>
+		</footer>
 
 	</div>
 
